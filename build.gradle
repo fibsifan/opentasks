@@ -20,6 +20,11 @@ def gitVersion = { ->
     return stdout.toString().trim()
 }
 
+wrapper {
+    gradleVersion = "6.9.4"
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 allprojects {
     version gitVersion()
 
