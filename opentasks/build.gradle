@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+plugins {
+    id ("com.android.application")
+}
 if (project.hasProperty('PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS')) {
     apply plugin: 'com.github.triplet.play'
 }
