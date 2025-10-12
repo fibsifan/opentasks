@@ -21,9 +21,14 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
+        maven {
+            url = uri("https://jitpack.io")
+        }
     }
 }
 
-include ":opentasks-theme"
-include ":opentasks", ":opentasks-provider", ":opentasks-contract", ":opentaskspal"
+include(":opentasks-theme")
+include(":opentasks")
+include(":opentasks-provider")
+include(":opentasks-contract")
+include(":opentaskspal")
