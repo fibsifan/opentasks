@@ -59,14 +59,14 @@ android {
     productFlavors {
     }
 
-    lintOptions {
-        disable 'MissingTranslation' // TODO
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'org.dmfs.tasks'
+    lint {
+        disable 'MissingTranslation'
+    }
 }
 
 dependencies {
