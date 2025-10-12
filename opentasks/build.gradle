@@ -25,7 +25,7 @@ android {
         minSdkVersion MIN_SDK_VERSION.toInteger()
         targetSdkVersion TARGET_SDK_VERSION.toInteger()
         // spread version code to allow inserting versions if necessary
-        versionCode gitCommitNo('refs/remotes/origin/master') * 99 + gitCommitNo('HEAD') + Integer.parseInt(VERSION_OVERRIDE)
+        versionCode gitCommitNo('refs/remotes/origin/main') * 99 + gitCommitNo('HEAD') + Integer.parseInt(VERSION_OVERRIDE)
         versionName version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,8 +49,9 @@ android {
         }
     }
     packagingOptions {
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
+        resources {
+            excludes += ['META-INF/NOTICE', 'META-INF/LICENSE']
+        }
     }
 
     productFlavors {
@@ -63,6 +64,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'org.dmfs.tasks'
 }
 
 dependencies {

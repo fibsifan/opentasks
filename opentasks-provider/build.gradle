@@ -21,9 +21,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     packagingOptions {
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
+        resources {
+            excludes += ['META-INF/NOTICE', 'META-INF/LICENSE']
+        }
     }
+    namespace 'org.dmfs.tasks.provider'
 }
 
 dependencies {
