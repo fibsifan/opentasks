@@ -15,5 +15,3 @@ tasks.wrapper {
 allprojects {
     version = gitVersion()
 }
-
-apply(from = "dependencies.gradle")
