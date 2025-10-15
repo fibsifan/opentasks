@@ -1,15 +1,15 @@
 plugins {
     id ("com.android.application")
 }
-if (project.hasProperty('PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS')) {
-    apply plugin: 'com.github.triplet.play'
+if (project.hasProperty("PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS")) {
+    apply plugin: "com.github.triplet.play"
 }
 // commit number is only relevant to the application project
 def gitCommitNo = { ref ->
     def stdout = new ByteArrayOutputStream()
     try {
         exec {
-            commandLine 'git', 'rev-list', '--count', ref
+            commandLine("git", "rev-list", "--count", ref)
             standardOutput = stdout
         }
 
@@ -21,38 +21,38 @@ def gitCommitNo = { ref ->
 }
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION.toInteger()
+    compileSdkVersion(COMPILE_SDK_VERSION.toInteger())
     defaultConfig {
-        applicationId "org.dmfs.tasks"
-        minSdkVersion MIN_SDK_VERSION.toInteger()
-        targetSdkVersion TARGET_SDK_VERSION.toInteger()
+        applicationId = "org.dmfs.tasks"
+        minSdkVersion(MIN_SDK_VERSION.toInteger())
+        targetSdkVersion(TARGET_SDK_VERSION.toInteger())
         // spread version code to allow inserting versions if necessary
-        versionCode gitCommitNo('refs/remotes/origin/main') * 99 + gitCommitNo('HEAD') + Integer.parseInt(VERSION_OVERRIDE)
-        versionName version
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionCode = gitCommitNo("refs/remotes/origin/main") * 99 + gitCommitNo("HEAD") + Integer.parseInt(VERSION_OVERRIDE)
+        versionName = version
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     if (project.hasProperty("DMFS_RELEASE_KEYSTORE")) {
         signingConfigs {
             release {
-                storeFile file(DMFS_RELEASE_KEYSTORE)
-                storePassword DMFS_RELEASE_KEYSTORE_PASSWORD
-                keyAlias DMFS_RELEASE_KEY_ALIAS
-                keyPassword DMFS_RELEASE_KEY_PASSWORD
+                storeFile(file(DMFS_RELEASE_KEYSTORE))
+                storePassword(DMFS_RELEASE_KEYSTORE_PASSWORD)
+                keyAlias(DMFS_RELEASE_KEY_ALIAS)
+                keyPassword(DMFS_RELEASE_KEY_PASSWORD)
             }
         }
     }
     buildTypes {
         release {
             if (project.hasProperty("DMFS_RELEASE_KEYSTORE")) {
-                signingConfig signingConfigs.release
+                signingConfig(signingConfigs.release)
             }
-            minifyEnabled true
-            proguardFiles 'proguard.cfg'
+            minifyEnabled(true)
+            proguardFiles("proguard.cfg")
         }
     }
     packagingOptions {
         resources {
-            excludes += ['META-INF/NOTICE', 'META-INF/LICENSE']
+            excludes += ["META-INF/NOTICE", "META-INF/LICENSE"]
         }
     }
 
@@ -60,54 +60,54 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
-    namespace 'org.dmfs.tasks'
+    namespace = "org.dmfs.tasks"
     lint {
-        disable 'MissingTranslation'
+        disable = [ "MissingTranslation" ]
     }
 }
 
 dependencies {
-    implementation project(':opentasks-theme')
-    implementation project(':opentasks-provider')
-    implementation deps.support_appcompat
-    implementation deps.support_design
-    implementation(deps.xml_magic) {
-        // xmlpull is part of the runtime, so don't pull it in here
-        exclude group: 'xmlpull', module: 'xmlpull'
+    implementation(project(":opentasks-theme"))
+    implementation(project(":opentasks-provider"))
+    implementation(libs.support.appcompat)
+    implementation(libs.support.design)
+    implementation(libs.xml.magic) {
+        // xmlpull is part of the runtime, so don"t pull it in here
+        exclude group: "xmlpull", module: "xmlpull"
     }
-    implementation deps.android_dashclock
-    implementation deps.color_picker
-    implementation(deps.codeka_carrot) {
-        exclude module: 'iterators' // TODO Remove when iterators have been removed from codeka:carrot
+    implementation(libs.android.dashclock)
+    implementation(libs.color.picker)
+    implementation(libs.codeka.carrot) {
+        exclude module: "iterators" // TODO Remove when iterators have been removed from codeka:carrot
     }
-    implementation(deps.android_carrot) {
-        exclude module: 'carrot'
-        exclude module: 'iterators'
-        exclude module: 'jems'
+    implementation(libs.android.carrot) {
+        exclude module: "carrot"
+        exclude module: "iterators"
+        exclude module: "jems"
     }
-    implementation deps.jems
-    implementation deps.datetime
-    implementation deps.bolts_color
-    implementation deps.retention_magic
+    implementation(libs.jems)
+    implementation(libs.datetime)
+    implementation(libs.bolts.color)
+    implementation(libs.retention.magic)
 
-    testImplementation deps.junit
-    testImplementation deps.robolectric
-    testImplementation deps.jems_testing
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.jems.testing)
 
-    androidTestImplementation deps.support_test_runner
-    androidTestImplementation deps.support_test_rules
-    implementation project(path: ':opentaskspal')
+    androidTestImplementation(libs.support.test.runner)
+    androidTestImplementation(libs.support.test.rules)
+    implementation project(path: ":opentaskspal")
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.maltaisn:recurpicker:2.1.4'
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("androidx.preference:preference:1.1.1")
+    implementation("com.maltaisn:recurpicker:2.1.4")
 }
 
-if (project.hasProperty('PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS')) {
+if (project.hasProperty("PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS")) {
     play {
         serviceAccountCredentials = file(PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS)
         // the track is determined automatically by the version number format
@@ -132,13 +132,13 @@ if (project.hasProperty('PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS')) {
 
 task postVersion {
     doLast {
-        if (project.hasProperty('OPENTASKS_API_KEY')) {
+        if (project.hasProperty("OPENTASKS_API_KEY")) {
             // publish version number on api.opentasks.app
-            ((HttpURLConnection) new URL('https://opentasks-app.appspot.com/v1/app/latest_version/').openConnection()).with({
-                requestMethod = 'POST'
+            ((HttpURLConnection) new URL("https://opentasks-app.appspot.com/v1/app/latest_version/").openConnection()).with({
+                requestMethod = "POST"
                 doOutput = true
-                setRequestProperty('Content-Type', 'application/x-www-form-urlencoded')
-                setRequestProperty('Authorization', "Token token=\"${OPENTASKS_API_KEY}\"")
+                setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                setRequestProperty("Authorization", "Token token=\"${OPENTASKS_API_KEY}\"")
                 outputStream.withPrintWriter({ printWriter ->
                     printWriter.write("version_code=${project.android.defaultConfig.versionCode}&version_name=${project.android.defaultConfig.versionName}")
                 })
