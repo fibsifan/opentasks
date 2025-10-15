@@ -35,3 +35,6 @@ support-test-rules = { module = "androidx.test:rules", version.ref = "androidx-t
 jems_testing = { module = "org.dmfs:jems-testing", version.ref = "jems-version" }
 contenttestpal = { module = "com.github.dmfs.contentpal:contenttestpal", version.ref = "contentpal-version" }
 contentpal_testing = { module = "com.github.dmfs.contentpal:contentpal-testing", version.ref = "contentpal-version" }
+
+[plugins]
+play-publisher = { id = "com.github.triplet.play", version = "2.8.1" }
