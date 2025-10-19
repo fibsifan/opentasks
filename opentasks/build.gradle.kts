@@ -24,8 +24,6 @@ android {
     defaultConfig {
         val MIN_SDK_VERSION: String by project
         minSdk = MIN_SDK_VERSION.toInt()
-        val TARGET_SDK_VERSION: String by project
-        targetSdk = TARGET_SDK_VERSION.toInt()
         applicationId = "org.dmfs.tasks"
 
         // spread version code to allow inserting versions if necessary
@@ -59,7 +57,7 @@ android {
             proguardFiles += listOf(file("proguard.cfg"))
         }
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += setOf("META-INF/NOTICE", "META-INF/LICENSE")
         }
