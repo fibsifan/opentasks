@@ -2,6 +2,7 @@ import com.github.triplet.gradle.play.PlayPublisherExtension
 import java.io.ByteArrayOutputStream
 import java.io.PrintWriter
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 
 plugins {
@@ -10,19 +11,10 @@ plugins {
 }
 
 // commit number is only relevant to the application project
-fun gitCommitNo (ref: String): Int {
-    val stdout = ByteArrayOutputStream()
-    try {
-        exec {
-            commandLine("git", "rev-list", "--count", ref)
-            standardOutput = stdout
-        }
-
-        return stdout.toString().trim().toInt()
-    }
-    catch (e: Exception) {
-        return 0
-    }
+fun gitCommitNo (ref: String): Provider<Int> {
+    return providers.exec {
+        commandLine("git", "rev-list", "--count", ref)
+    }.standardOutput.asText.map { it.trim().toInt() }
 }
 
 android {
@@ -38,7 +30,7 @@ android {
 
         // spread version code to allow inserting versions if necessary
         val VERSION_OVERRIDE: String by project
-        versionCode = gitCommitNo("refs/remotes/origin/main") * 99 + gitCommitNo("HEAD") + VERSION_OVERRIDE.toInt()
+        versionCode = gitCommitNo("refs/remotes/origin/main").get() * 99 + gitCommitNo("HEAD").get() + VERSION_OVERRIDE.toInt()
         //versionName = version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -155,12 +147,12 @@ if (project.hasProperty("PLAY_STORE_SERVICE_ACCOUNT_CREDENTIALS")) {
     }
 }
 
-task("postVersion") {
+tasks.register("postVersion") {
     doLast {
         if (project.hasProperty("OPENTASKS_API_KEY")) {
             val OPENTASKS_API_KEY: String by project
             // publish version number on api.opentasks.app
-            val connection = URL("https://opentasks-app.appspot.com/v1/app/latest_version/").openConnection() as HttpURLConnection
+            val connection = URI.create("https://opentasks-app.appspot.com/v1/app/latest_version/").toURL().openConnection() as HttpURLConnection
             with(connection) {
                 requestMethod = "POST"
                 doOutput = true

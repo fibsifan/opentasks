@@ -1,10 +1,7 @@
-fun gitVersion(): String {
-    val stdout = java.io.ByteArrayOutputStream()
-    exec {
+fun gitVersion(): Provider<String> {
+    return providers.exec {
         commandLine("git", "describe", "--tags", "--always", "--dirty")
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
+    }.standardOutput.asText
 }
 
 tasks.wrapper {
