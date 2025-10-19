@@ -8,7 +8,7 @@ fun gitVersion(): String {
 }
 
 tasks.wrapper {
-    gradleVersion = "7.6.6"
+    gradleVersion = "8.14.3"
     distributionType = Wrapper.DistributionType.ALL
 }
 
